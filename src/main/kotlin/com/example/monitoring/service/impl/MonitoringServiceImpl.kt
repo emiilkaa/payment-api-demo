@@ -22,7 +22,7 @@ class MonitoringServiceImpl(
 ) : MonitoringService {
 
     @Around(
-        "@annotation(ru.tinkoff.monitoring.annotation.MonitoringOperation) && args(operationData)",
+        "@annotation(com.example.monitoring.annotation.MonitoringOperation) && args(operationData)",
         argNames = "operationData"
     )
     override fun monitoringOperation(joinPoint: ProceedingJoinPoint, operationData: OperationData<OperationRequest>): Any? {
@@ -30,33 +30,33 @@ class MonitoringServiceImpl(
     }
 
     @Around(
-        "@annotation(ru.tinkoff.monitoring.annotation.MonitoringRequestData) && args(request)",
+        "@annotation(com.example.monitoring.annotation.MonitoringRequestData) && args(request)",
         argNames = "request"
     )
     override fun monitoringMessage(joinPoint: ProceedingJoinPoint, request: OperationRequest): Any? {
         return monitoringRequestDataService.monitoringRequestEnrichment(joinPoint, request)
     }
 
-    @Around("@annotation(ru.tinkoff.monitoring.annotation.MonitoringLock) && args(id,cacheName)", argNames = "id,cacheName")
+    @Around("@annotation(com.example.monitoring.annotation.MonitoringLock) && args(id,cacheName)", argNames = "id,cacheName")
     override fun monitoringLock(joinPoint: ProceedingJoinPoint, id: String, cacheName: String): Any? {
         val annotation: MonitoringLock = getAnnotation(joinPoint, MonitoringLock::class.java)
         val action = annotation.action
         return monitoringLockService.monitoringLock(joinPoint, action, cacheName)
     }
 
-    @Around("@annotation(ru.tinkoff.monitoring.annotation.MonitoringLock) && args(lockInfo)", argNames = "lockInfo")
+    @Around("@annotation(com.example.monitoring.annotation.MonitoringLock) && args(lockInfo)", argNames = "lockInfo")
     override fun monitoringLock(joinPoint: ProceedingJoinPoint, lockInfo: LockInfo): Any? {
         val annotation: MonitoringLock = getAnnotation(joinPoint, MonitoringLock::class.java)
         val action = annotation.action
         return monitoringLockService.monitoringLock(joinPoint, action, lockInfo.cacheName)
     }
 
-    @Around("@annotation(ru.tinkoff.monitoring.annotation.MonitoringIgnite) && args(id,cacheName)", argNames = "id,cacheName")
+    @Around("@annotation(com.example.monitoring.annotation.MonitoringIgnite) && args(id,cacheName)", argNames = "id,cacheName")
     override fun monitoringIgnite(joinPoint: ProceedingJoinPoint, id: String, cacheName: String): Any? {
         return monitoringIgniteService.monitoringCache(joinPoint, MonitoringConstants.LOCK_ACTION, cacheName)
     }
 
-    @Around("@annotation(ru.tinkoff.monitoring.annotation.MonitoringIgnite) && args(lockInfo)", argNames = "lockInfo")
+    @Around("@annotation(com.example.monitoring.annotation.MonitoringIgnite) && args(lockInfo)", argNames = "lockInfo")
     override fun monitoringIgnite(joinPoint: ProceedingJoinPoint, lockInfo: LockInfo): Any? {
         return monitoringIgniteService.monitoringCache(joinPoint, MonitoringConstants.UNLOCK_ACTION, lockInfo.cacheName)
     }
