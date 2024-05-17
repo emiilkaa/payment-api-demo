@@ -36,6 +36,11 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.liquibase:liquibase-core")
+    implementation("org.hibernate:hibernate-core:5.4.32.Final")
+    implementation("com.vladmihalcea:hibernate-types-52:2.20.0")
+    implementation("org.springframework.retry:spring-retry:1.3.1")
+    implementation("org.apache.ignite:ignite-core:2.10.0")
+    implementation("org.springframework.cloud:spring-cloud-sleuth-instrumentation:3.0.3")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("com.oracle.database.jdbc:ojdbc11")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
@@ -57,9 +62,9 @@ tasks.withType<Test> {
 }
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions {
-    jvmTarget = "1.8"
+    jvmTarget = "17"
 }
 val compileTestKotlin: KotlinCompile by tasks
 compileTestKotlin.kotlinOptions {
-    jvmTarget = "1.8"
+    jvmTarget = "17"
 }

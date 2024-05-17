@@ -1,0 +1,80 @@
+server:
+  port: 8080
+  shutdown: graceful
+spring:
+  application:
+    name: payment-api-demo
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1522/PAYMENT_API
+    username: PAYMENT_API_APP
+    password: PAYMENT_API_APP_testPASS
+    driver-class-name: oracle.jdbc.OracleDriver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      keepalive-time: 30000
+      minimum-idle: 5
+      maximum-pool-size: 20
+      connection-timeout: 10000
+      connection-test-query: select 1 from DUAL
+      schema: PAYMENT_API
+      dataSourceProperties:
+        socketTimeout: 30
+        tcpKeepAlive: true
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+      hibernate.dialect: org.hibernate.dialect.Oracle12cDialect
+      hibernate.default_schema: PAYMENT_API
+  transaction:
+    default-timeout: 60
+  cloud:
+    discovery:
+      enabled: false
+  lifecycle:
+    timeout-per-shutdown-phase: 60s
+
+app:
+  ignite:
+    addresses: localhost:10800
+    expire-policy-duration: 60
+  executor:
+    core-size: 5
+    max-size: 10
+  cache:
+    evict:
+      auth: 1800000
+      terminal: 600000
+      validation: 900000
+      configParameter: 600000
+      allowExtension: 600000
+      messageMap: 600000
+      cardRange: 600000
+      user: 900000
+  retry:
+    retry-count: 10
+    delay: 1000
+
+management:
+  server:
+    port: 8090
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    db:
+      enabled: false
+    diskspace:
+      enabled: false
+    rabbit:
+      enabled: false
+
+logging:
+  level:
+    org.springframework.jdbc.core.JdbcTemplate: DEBUG

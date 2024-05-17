@@ -6,4 +6,5 @@ import com.example.model.OperationResponse
 interface OperationService {
 
     fun handleOperation(request: OperationRequest): OperationResponse
+
 }

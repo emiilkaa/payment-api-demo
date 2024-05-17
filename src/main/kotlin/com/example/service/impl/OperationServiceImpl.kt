@@ -15,7 +15,9 @@ class OperationServiceImpl(
 
     override fun handleOperation(request: OperationRequest): OperationResponse {
         return try {
-            getOperation(request).handleRequest(request)
+            val operation = getOperation(request)
+            val operationData = operation.getOperationData(request)
+            operation.handleRequest(operationData)
         } catch (ex: Exception) {
             return OperationResponse(
                 success = false,
