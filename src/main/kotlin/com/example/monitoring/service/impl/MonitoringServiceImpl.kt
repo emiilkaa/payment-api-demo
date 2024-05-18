@@ -5,6 +5,7 @@ import com.example.model.OperationData
 import com.example.model.OperationRequest
 import com.example.monitoring.MonitoringConstants
 import com.example.monitoring.annotation.MonitoringLock
+import com.example.monitoring.annotation.MonitoringOperationInfo
 import com.example.monitoring.service.*
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
@@ -18,7 +19,8 @@ class MonitoringServiceImpl(
     val monitoringIgniteService: MonitoringIgniteService,
     val monitoringLockService: MonitoringLockService,
     val monitoringOperationService: MonitoringOperationService,
-    val monitoringRequestDataService: MonitoringRequestDataService
+    val monitoringRequestDataService: MonitoringRequestDataService,
+    val monitoringOperationInfoService: MonitoringOperationInfoService
 ) : MonitoringService {
 
     @Around(
@@ -59,6 +61,13 @@ class MonitoringServiceImpl(
     @Around("@annotation(com.example.monitoring.annotation.MonitoringIgnite) && args(lockInfo)", argNames = "lockInfo")
     override fun monitoringIgnite(joinPoint: ProceedingJoinPoint, lockInfo: LockInfo): Any? {
         return monitoringIgniteService.monitoringCache(joinPoint, MonitoringConstants.UNLOCK_ACTION, lockInfo.cacheName)
+    }
+
+    @Around("@annotation(com.example.monitoring.annotation.MonitoringOperationInfo")
+    override fun monitoringOperationInfo(joinPoint: ProceedingJoinPoint, id: Long): Any? {
+        val annotation: MonitoringOperationInfo = getAnnotation(joinPoint, MonitoringOperationInfo::class.java)
+        val requestType = annotation.requestType
+        return monitoringOperationInfoService.monitoringOperationInfo(joinPoint, requestType)
     }
 
     private fun <T : Annotation> getAnnotation(joinPoint: ProceedingJoinPoint, annotationClass: Class<T>): T {

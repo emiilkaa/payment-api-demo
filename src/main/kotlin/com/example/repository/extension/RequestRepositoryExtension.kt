@@ -5,5 +5,5 @@ import com.example.repository.RequestRepository
 
 fun RequestRepository.findByIdOrThrow(requestId: Long): Request {
     return findById(requestId)
-        .orElseThrow { throw RuntimeException("Request not found by id $requestId") }
+        .orElseThrow { throw IllegalArgumentException("Request not found by id $requestId") }
 }

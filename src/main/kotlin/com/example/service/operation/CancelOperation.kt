@@ -2,6 +2,7 @@ package com.example.service.operation
 
 import com.example.entity.Payment
 import com.example.entity.Request
+import com.example.entity.extension.getId
 import com.example.enums.RequestType
 import com.example.model.*
 import com.example.service.*
@@ -21,7 +22,7 @@ class CancelOperation(
 
     override fun getPaymentInfo(request: CancelRequest): Payment {
         val payment = requestService.getRequest(request.originalRequestId).payment
-        payment.cardData = cardDataService.getCardDataByPayment(payment.id!!)
+        payment.cardData = cardDataService.getCardDataByPayment(payment.getId())
         return payment
     }
 
@@ -50,7 +51,7 @@ class CancelOperation(
     }
 
     private fun createCancelMessage(request: Request) = NspkRequest(
-        requestId = request.id!!,
+        requestId = request.getId(),
         messageType = "CA",
         cardPan = request.payment.cardData.pan,
         expDate = request.payment.cardData.panExpDate,
