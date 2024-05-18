@@ -13,6 +13,6 @@ interface MonitoringService {
     fun monitoringLock(joinPoint: ProceedingJoinPoint, lockInfo: LockInfo): Any?
     fun monitoringIgnite(joinPoint: ProceedingJoinPoint, id: String, cacheName: String): Any?
     fun monitoringIgnite(joinPoint: ProceedingJoinPoint, lockInfo: LockInfo): Any?
-    fun monitoringOperationInfo(joinPoint: ProceedingJoinPoint, id: Long): Any?
+    fun monitoringOperationInfo(joinPoint: ProceedingJoinPoint): Any?
 
 }

@@ -64,7 +64,7 @@ class MonitoringServiceImpl(
     }
 
     @Around("@annotation(com.example.monitoring.annotation.MonitoringOperationInfo)")
-    override fun monitoringOperationInfo(joinPoint: ProceedingJoinPoint, id: Long): Any? {
+    override fun monitoringOperationInfo(joinPoint: ProceedingJoinPoint): Any? {
         val annotation: MonitoringOperationInfo = getAnnotation(joinPoint, MonitoringOperationInfo::class.java)
         val requestType = annotation.requestType
         return monitoringOperationInfoService.monitoringOperationInfo(joinPoint, requestType)
