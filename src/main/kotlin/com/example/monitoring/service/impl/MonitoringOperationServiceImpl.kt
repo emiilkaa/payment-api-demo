@@ -48,7 +48,6 @@ class MonitoringOperationServiceImpl(
         try {
             val request = message.request
             val tags = requestTags(request)
-            tags.add(Tag.of(MonitoringConstants.TAG_RESPONSE_CODE, "UNKNOWN"))
             tags.add(Tag.of(MonitoringConstants.TAG_RESULT, MonitoringConstants.TAG_VALUE_FAILURE))
             measureOperationTime(tags, start)
         } catch (ex: Exception) {
@@ -68,14 +67,12 @@ class MonitoringOperationServiceImpl(
 
     private fun requestTags(request: Request): MutableSet<Tag> {
         return mutableSetOf(
-            Tag.of(MonitoringConstants.TAG_REQUEST_TYPE, request.requestType.name),
-            Tag.of(MonitoringConstants.TAG_PAYMENT_SCHEME, request.payment.cardData.paymentScheme.name)
+            Tag.of(MonitoringConstants.TAG_REQUEST_TYPE, request.requestType.name)
         )
     }
 
     private fun responseTags(response: OperationResponse): MutableSet<Tag> {
         return mutableSetOf(
-            Tag.of(MonitoringConstants.TAG_RESPONSE_CODE, response.responseCode),
             Tag.of(
                 MonitoringConstants.TAG_RESULT,
                 if (response.success) MonitoringConstants.TAG_VALUE_SUCCESS else MonitoringConstants.TAG_VALUE_FAILURE

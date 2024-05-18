@@ -3,6 +3,7 @@ package com.example.service.operation
 import com.example.common.LOGGER
 import com.example.entity.Payment
 import com.example.entity.Request
+import com.example.entity.extension.getId
 import com.example.enums.PaymentStatus
 import com.example.enums.RequestType
 import com.example.model.*
@@ -59,7 +60,7 @@ class PayOperation(
     )
 
     private fun createPayMessage(request: Request, cardInfo: CardInfo) = NspkRequest(
-        requestId = request.id!!,
+        requestId = request.getId(),
         messageType = "PA",
         cardPan = cardInfo.cardNumber,
         expDate = cardInfo.expDate,
