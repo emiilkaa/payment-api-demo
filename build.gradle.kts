@@ -17,7 +17,7 @@ plugins {
 }
 
 group = "com.example"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1-POSTGRES"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -68,7 +68,7 @@ dependencies {
     liquibaseRuntime("org.liquibase:liquibase-core:3.6.1")
     liquibaseRuntime("org.liquibase:liquibase-groovy-dsl:2.0.1")
     liquibaseRuntime("ch.qos.logback:logback-classic")
-    liquibaseRuntime("com.oracle.database.jdbc:ojdbc11")
+    liquibaseRuntime("org.postgresql:postgresql")
 }
 
 tasks.getByName<Jar>("jar") {
@@ -96,7 +96,7 @@ liquibase {
             "changeLogFile" to props.getProperty("changeLogFile")
         }
     } else {
-        fileProperties.appendText("jdbc:oracle:thin:@localhost:1522/PAYMENT_API\n")
+        fileProperties.appendText("jdbc:postgresql://77.232.142.33:5432/payment_api_app\n")
         fileProperties.appendText("username=PAYMENT_API_APP\n")
         fileProperties.appendText("password=change_it\n")
         fileProperties.appendText("changeLogFile=${project.projectDir.path}/src/main/resources/liquibase/changelog.yaml\n")

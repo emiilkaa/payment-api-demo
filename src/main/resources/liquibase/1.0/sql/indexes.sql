@@ -1,8 +1,8 @@
-CREATE INDEX PAYMENT_API_APP.INDEX_REQUEST_PAYMENT_ID
-    ON PAYMENT_API_APP.REQUEST (PAYMENT_ID) online;
-CREATE INDEX PAYMENT_API_APP.INDEX_CARD_DATA_PAYMENT_ID
-    ON PAYMENT_API_APP.CARD_DATA (PAYMENT_ID) online;
-CREATE INDEX PAYMENT_API_APP.INDEX_NSPK_DATA_REQUEST_ID
-    ON PAYMENT_API_APP.NSPK_DATA (REQUEST_ID) online;
-CREATE INDEX PAYMENT_API_APP.INDEX_NSPK_DATA_PAYMENT_ID
-    ON PAYMENT_API_APP.NSPK_DATA (PAYMENT_ID) online;
+create index if not exists index_request_payment_id
+    on payment_api_app.request (PAYMENT_ID);
+create index if not exists index_card_data_payment_id
+    on payment_api_app.card_data (PAYMENT_ID);
+create index if not exists index_nspk_data_request_id
+    on payment_api_app.nspk_data (REQUEST_ID);
+create index if not exists index_nspk_data_payment_id
+    on payment_api_app.nspk_data (PAYMENT_ID);

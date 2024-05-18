@@ -2,7 +2,7 @@ package com.example.entity
 
 import com.example.enums.RequestStatus
 import com.example.enums.RequestType
-import com.vladmihalcea.hibernate.type.json.JsonStringType
+import com.vladmihalcea.hibernate.type.json.JsonType
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
@@ -13,40 +13,41 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "REQUEST", schema = "PAYMENT_API_APP")
-@SequenceGenerator(name = "REQUEST_SEQ", sequenceName = "REQUEST_SEQ", allocationSize = 1)
-@TypeDef(name = "json", typeClass = JsonStringType::class)
+@TypeDef(name = "json", typeClass = JsonType::class)
+@TypeDef(name = "jsonb", typeClass = JsonType::class)
 data class Request(
 
     @Id
-    @Column(columnDefinition = "NUMBER", unique = true)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "REQUEST_SEQ")
+    @SequenceGenerator(name = "REQUEST_SEQ", sequenceName = "REQUEST_SEQ", allocationSize = 1)
+    @Column(columnDefinition = "numeric", unique = true)
     var id: Long? = null,
 
-    @Column(name = "DATE_CREATED", columnDefinition = "TIMESTAMP(6)")
+    @Column(name = "DATE_CREATED", columnDefinition = "TIMESTAMP")
     var dateCreated: LocalDateTime = LocalDateTime.now(),
 
-    @Column(name = "DATE_UPDATED", columnDefinition = "TIMESTAMP(6)")
+    @Column(name = "DATE_UPDATED", columnDefinition = "TIMESTAMP")
     var dateUpdated: LocalDateTime = LocalDateTime.now(),
 
-    @Column(name = "REQUEST_TYPE", columnDefinition = "VARCHAR2(50)", nullable = false)
+    @Column(name = "REQUEST_TYPE", columnDefinition = "VARCHAR(50)", nullable = false)
     @Enumerated(EnumType.STRING)
     var requestType: RequestType,
 
-    @Column(name = "AMOUNT", columnDefinition = "NUMBER", nullable = false)
+    @Column(name = "AMOUNT", columnDefinition = "NUMERIC(18, 2)", nullable = false)
     var amount: BigDecimal,
 
-    @Column(name = "STATUS", columnDefinition = "VARCHAR2(50)", nullable = false)
+    @Column(name = "STATUS", columnDefinition = "VARCHAR(50)", nullable = false)
     @Enumerated(EnumType.STRING)
     var status: RequestStatus,
 
-    @Column(name = "TERMINAl_ID", columnDefinition = "VARCHAR2(20)", nullable = false)
+    @Column(name = "TERMINAl_ID", columnDefinition = "VARCHAR(20)", nullable = false)
     var terminalId: String,
 
-    @Column(name = "MESSAGE", columnDefinition = "VARCHAR2(256)", nullable = true)
+    @Column(name = "MESSAGE", columnDefinition = "VARCHAR(256)", nullable = true)
     var message: String?,
 
-    @Column(name = "EXTENSION_FIELDS")
-    @Type(type = "json")
+    @Column(name = "EXTENSION_FIELDS", columnDefinition = "jsonb")
+    @Type(type = "jsonb")
     var extensionFields: Map<String, String>
 
 ) : Serializable {

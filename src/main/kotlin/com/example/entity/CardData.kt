@@ -8,31 +8,31 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "CARD_DATA", schema = "PAYMENT_API_APP")
-@SequenceGenerator(name = "CARD_DATA_SEQ", sequenceName = "CARD_DATA_SEQ", allocationSize = 1)
 data class CardData(
 
     @Id
-    @Column(columnDefinition = "NUMBER", unique = true)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CARD_DATA_SEQ")
+    @SequenceGenerator(name = "CARD_DATA_SEQ", sequenceName = "CARD_DATA_SEQ", allocationSize = 1)
+    @Column(columnDefinition = "numeric", unique = true)
     var id: Long? = null,
 
-    @Column(name = "DATE_CREATED", columnDefinition = "TIMESTAMP(6)", nullable = false)
+    @Column(name = "DATE_CREATED", columnDefinition = "TIMESTAMP", nullable = false)
     var dateCreated: LocalDateTime = LocalDateTime.now(),
 
-    @Column(name = "DATE_UPDATED", columnDefinition = "TIMESTAMP(6)", nullable = false)
+    @Column(name = "DATE_UPDATED", columnDefinition = "TIMESTAMP", nullable = false)
     var dateUpdated: LocalDateTime = LocalDateTime.now(),
 
-    @Column(name = "PAYMENT_SCHEME", columnDefinition = "VARCHAR2(50)", nullable = false)
+    @Column(name = "PAYMENT_SCHEME", columnDefinition = "VARCHAR(50)", nullable = false)
     @Enumerated(EnumType.STRING)
     var paymentScheme: PaymentScheme,
 
-    @Column(name = "PAN", columnDefinition = "VARCHAR2(50)")
+    @Column(name = "PAN", columnDefinition = "VARCHAR(50)")
     var pan: String? = null,
 
-    @Column(name = "PAN_EXP_DATE", columnDefinition = "VARCHAR2(24)")
+    @Column(name = "PAN_EXP_DATE", columnDefinition = "VARCHAR(24)")
     var panExpDate: String? = null,
 
-    @Column(name = "CARDHOLDER_NAME", columnDefinition = "VARCHAR2(50)")
+    @Column(name = "CARDHOLDER_NAME", columnDefinition = "VARCHAR(50)")
     var cardholderName: String? = null
 
 ) : Serializable {

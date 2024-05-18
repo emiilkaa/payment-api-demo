@@ -5,7 +5,7 @@ databaseChangeLog:
       comment: create tables and sequences
       changes:
         - sqlFile:
-            dbms: oracle
+            dbms: postgresql
             encoding: utf8
             path: sql/init_db.sql
             relativeToChangelogFile: true
@@ -15,7 +15,7 @@ databaseChangeLog:
       comment: create indexes on foreign keys
       changes:
         - sqlFile:
-            dbms: oracle
+            dbms: postgresql
             encoding: utf8
             path: sql/indexes.sql
             relativeToChangelogFile: true

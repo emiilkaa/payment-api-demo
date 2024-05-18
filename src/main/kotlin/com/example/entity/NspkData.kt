@@ -1,6 +1,6 @@
 package com.example.entity
 
-import com.vladmihalcea.hibernate.type.json.JsonStringType
+import com.vladmihalcea.hibernate.type.json.JsonType
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
@@ -10,36 +10,37 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "NSPK_DATA", schema = "PAYMENT_API_APP")
-@SequenceGenerator(name = "NSPK_DATA_SEQ", sequenceName = "NSPK_DATA_SEQ", allocationSize = 1)
-@TypeDef(name = "json", typeClass = JsonStringType::class)
+@TypeDef(name = "json", typeClass = JsonType::class)
+@TypeDef(name = "jsonb", typeClass = JsonType::class)
 data class NspkData(
 
     @Id
-    @Column(columnDefinition = "NUMBER", unique = true)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NSPK_DATA_SEQ")
+    @SequenceGenerator(name = "NSPK_DATA_SEQ", sequenceName = "NSPK_DATA_SEQ", allocationSize = 1)
+    @Column(columnDefinition = "numeric", unique = true)
     var id: Long? = null,
 
-    @Column(name = "DATE_CREATED", columnDefinition = "TIMESTAMP(6)", nullable = false)
+    @Column(name = "DATE_CREATED", columnDefinition = "TIMESTAMP", nullable = false)
     var dateCreated: LocalDateTime = LocalDateTime.now(),
 
-    @Column(name = "DATE_UPDATED", columnDefinition = "TIMESTAMP(6)", nullable = false)
+    @Column(name = "DATE_UPDATED", columnDefinition = "TIMESTAMP", nullable = false)
     var dateUpdated: LocalDateTime = LocalDateTime.now(),
 
-    @Column(name = "RESPONSE_CODE", columnDefinition = "VARCHAR2(50)")
+    @Column(name = "RESPONSE_CODE", columnDefinition = "VARCHAR(50)")
     var responseCode: String? = null,
 
-    @Column(name = "ERROR_CODE", columnDefinition = "VARCHAR2(30)")
+    @Column(name = "ERROR_CODE", columnDefinition = "VARCHAR(30)")
     var errorCode: String? = null,
 
-    @Column(name = "ERROR_MESSAGE", columnDefinition = "VARCHAR2(50)")
+    @Column(name = "ERROR_MESSAGE", columnDefinition = "VARCHAR(50)")
     var errorMessage: String? = null,
 
-    @Column(name = "REQUEST_MESSAGE")
-    @Type(type = "json")
+    @Column(name = "REQUEST_MESSAGE", columnDefinition = "jsonb")
+    @Type(type = "jsonb")
     var requestMessage: Map<String, Any>?,
 
-    @Column(name = "RESPONSE_MESSAGE")
-    @Type(type = "json")
+    @Column(name = "RESPONSE_MESSAGE", columnDefinition = "jsonb")
+    @Type(type = "jsonb")
     var responseMessage: Map<String, Any>?,
 
 ) : Serializable {
