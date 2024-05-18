@@ -5,9 +5,9 @@ spring:
   application:
     name: payment-api-demo
   datasource:
-    url: jdbc:oracle:thin:@localhost:1522/PAYMENT_API
+    url: jdbc:oracle:thin:@77.232.142.33:1521/ORCLPDB1
     username: PAYMENT_API_APP
-    password: PAYMENT_API_APP_testPASS
+    password: ${datasource_password}
     driver-class-name: oracle.jdbc.OracleDriver
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
@@ -18,7 +18,7 @@ spring:
       maximum-pool-size: 20
       connection-timeout: 10000
       connection-test-query: select 1 from DUAL
-      schema: PAYMENT_API
+      schema: PAYMENT_API_APP
       dataSourceProperties:
         socketTimeout: 30
         tcpKeepAlive: true
@@ -26,8 +26,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        show_sql: true
+        use_sql_comments: true
       hibernate.dialect: org.hibernate.dialect.Oracle12cDialect
-      hibernate.default_schema: PAYMENT_API
+      hibernate.default_schema: PAYMENT_API_APP
   transaction:
     default-timeout: 60
   cloud:
@@ -35,24 +37,16 @@ spring:
       enabled: false
   lifecycle:
     timeout-per-shutdown-phase: 60s
+  liquibase:
+    enabled: false
 
 app:
   ignite:
-    addresses: localhost:10800
+    addresses: 77.232.142.33:10800
     expire-policy-duration: 60
   executor:
     core-size: 5
     max-size: 10
-  cache:
-    evict:
-      auth: 1800000
-      terminal: 600000
-      validation: 900000
-      configParameter: 600000
-      allowExtension: 600000
-      messageMap: 600000
-      cardRange: 600000
-      user: 900000
   retry:
     retry-count: 10
     delay: 1000

@@ -1,6 +1,6 @@
 package com.example.entity
 
-import com.vladmihalcea.hibernate.type.json.JsonType
+import com.vladmihalcea.hibernate.type.json.JsonStringType
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
@@ -9,9 +9,9 @@ import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
-@Table(name = "NSPK_DATA", schema = "PAYMENT_API")
+@Table(name = "NSPK_DATA", schema = "PAYMENT_API_APP")
 @SequenceGenerator(name = "NSPK_DATA_SEQ", sequenceName = "NSPK_DATA_SEQ", allocationSize = 1)
-@TypeDef(name = "json", typeClass = JsonType::class)
+@TypeDef(name = "json", typeClass = JsonStringType::class)
 data class NspkData(
 
     @Id
@@ -34,13 +34,11 @@ data class NspkData(
     @Column(name = "ERROR_MESSAGE", columnDefinition = "VARCHAR2(50)")
     var errorMessage: String? = null,
 
-    @Lob
-    @Column(name = "REQUEST_MESSAGE", columnDefinition = "CLOB")
+    @Column(name = "REQUEST_MESSAGE")
     @Type(type = "json")
     var requestMessage: Map<String, Any>?,
 
-    @Lob
-    @Column(name = "RESPONSE_MESSAGE", columnDefinition = "CLOB")
+    @Column(name = "RESPONSE_MESSAGE")
     @Type(type = "json")
     var responseMessage: Map<String, Any>?,
 

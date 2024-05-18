@@ -1,5 +1,6 @@
 package com.example.service.impl
 
+import com.example.common.LOGGER
 import com.example.enums.RequestStatus
 import com.example.model.OperationRequest
 import com.example.model.OperationResponse
@@ -31,6 +32,7 @@ class OperationServiceImpl(
     }
 
     private fun getOperation(request: OperationRequest): Operation<OperationRequest> {
+        LOGGER.OPERATION.info("Get operation request with type {}", request.requestType())
         return operations.firstOrNull {
             it.getType() == request.requestType()
         } ?: throw RuntimeException("Operation not implemented")

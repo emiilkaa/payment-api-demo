@@ -4,7 +4,7 @@ import com.example.model.CancelRequest
 import com.example.model.OperationResponse
 import com.example.model.PayRequest
 import com.example.service.OperationService
-import jakarta.validation.Valid
+import javax.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 

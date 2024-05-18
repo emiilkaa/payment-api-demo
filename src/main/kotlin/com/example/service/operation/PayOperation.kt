@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service
 @Service
 class PayOperation(
     requestService: RequestService,
-    val paymentService: PaymentService,
     lockService: LockService,
+    val paymentService: PaymentService,
     val nspkService: NspkService,
     val cardDataService: CardDataService,
     val responseService: ResponseService
@@ -24,7 +24,7 @@ class PayOperation(
 
     override fun getPaymentInfo(request: PayRequest): Payment {
         val payment = getPayment(request)
-        val cardData = cardDataService.createCardData(request.cardInfo)
+        val cardData = cardDataService.createCardData(request.cardInfo, request.operationDate)
         cardData.payment = payment
         payment.cardData = cardData
         return payment
@@ -38,7 +38,7 @@ class PayOperation(
 
     override fun savePayment(payment: Payment) {
         paymentService.savePayment(payment)
-        cardDataService.saveCardData(payment.cardData)
+        payment.cardData = cardDataService.saveCardData(payment.cardData)
     }
 
     override fun getType() = RequestType.PAY
@@ -51,10 +51,11 @@ class PayOperation(
     }
 
     private fun getPayment(request: PayRequest) = Payment(
+        dateCreated = request.operationDate,
         amount = request.amount,
         originalAmount = request.amount,
         status = PaymentStatus.IN_PROCESS,
-        additionalData = mutableMapOf()
+        additionalData = request.additionalInfo()
     )
 
     private fun createPayMessage(request: Request, cardInfo: CardInfo) = NspkRequest(

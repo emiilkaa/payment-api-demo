@@ -8,5 +8,5 @@ data class OperationResponse(
     val responseCode: String,
     val requestId: Long?,
     val message: String,
-    val extension: MutableMap<String, String>
+    val extension: Map<String, String>
 )

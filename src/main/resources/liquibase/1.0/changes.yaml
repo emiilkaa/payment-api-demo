@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0-1
+      author: e.karachik
+      comment: create tables and sequences
+      changes:
+        - sqlFile:
+            dbms: oracle
+            encoding: utf8
+            path: sql/init_db.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 1.0-2
+      author: e.karachik
+      comment: create indexes on foreign keys
+      changes:
+        - sqlFile:
+            dbms: oracle
+            encoding: utf8
+            path: sql/indexes.sql
+            relativeToChangelogFile: true

@@ -25,7 +25,7 @@ class ResponseServiceImpl: ResponseService {
         responseCode = "-100",
         requestId = null,
         message = errorMessage,
-        extension = mutableMapOf()
+        extension = mapOf()
     )
 
 }

@@ -12,7 +12,8 @@ fun PayRequest.defaultRequest() = Request(
     status = RequestStatus.IN_PROCESS,
     terminalId = terminalId,
     message = "OK",
-    extensionFields = extension
+    extensionFields = extension,
+    dateCreated = operationDate
 )
 
 fun CancelRequest.defaultRequest() = Request(
@@ -21,5 +22,6 @@ fun CancelRequest.defaultRequest() = Request(
     status = RequestStatus.IN_PROCESS,
     terminalId = terminalId,
     message = "OK",
-    extensionFields = extension
+    extensionFields = extension,
+    dateCreated = operationDate
 )

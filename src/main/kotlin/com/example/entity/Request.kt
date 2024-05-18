@@ -2,7 +2,7 @@ package com.example.entity
 
 import com.example.enums.RequestStatus
 import com.example.enums.RequestType
-import com.vladmihalcea.hibernate.type.json.JsonType
+import com.vladmihalcea.hibernate.type.json.JsonStringType
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
@@ -12,9 +12,9 @@ import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
-@Table(name = "REQUEST", schema = "PAYMENT_API")
+@Table(name = "REQUEST", schema = "PAYMENT_API_APP")
 @SequenceGenerator(name = "REQUEST_SEQ", sequenceName = "REQUEST_SEQ", allocationSize = 1)
-@TypeDef(name = "json", typeClass = JsonType::class)
+@TypeDef(name = "json", typeClass = JsonStringType::class)
 data class Request(
 
     @Id
@@ -45,10 +45,9 @@ data class Request(
     @Column(name = "MESSAGE", columnDefinition = "VARCHAR2(256)", nullable = true)
     var message: String?,
 
-    @Lob
-    @Column(name = "EXTENSION_FIELDS", columnDefinition = "CLOB")
+    @Column(name = "EXTENSION_FIELDS")
     @Type(type = "json")
-    var extensionFields: MutableMap<String, String>
+    var extensionFields: Map<String, String>
 
 ) : Serializable {
 

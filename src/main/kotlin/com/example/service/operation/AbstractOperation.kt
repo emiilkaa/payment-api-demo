@@ -52,8 +52,8 @@ abstract class AbstractOperation<Req : OperationRequest>(
     abstract fun getRequestInfo(request: Req, payment: Payment): Request
 
     private fun saveRequest(operationData: OperationData<Req>) {
-        operationData.request.id = requestService.saveRequest(operationData.request).id
         savePayment(operationData.request.payment)
+        operationData.request.id = requestService.saveRequest(operationData.request).id
     }
 
     open fun savePayment(payment: Payment) {

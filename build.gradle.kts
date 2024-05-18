@@ -1,28 +1,42 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.Properties
+
+buildscript {
+    dependencies {
+        classpath("org.liquibase:liquibase-gradle-plugin:2.1.1")
+    }
+}
 
 plugins {
-    id("org.springframework.boot") version "3.2.5"
-    id("io.spring.dependency-management") version "1.1.4"
-    kotlin("jvm") version "1.7.10"
-    kotlin("plugin.spring") version "1.7.10"
-    kotlin("plugin.jpa") version "1.7.10"
+    id("org.springframework.boot") version "2.5.1"
+    id("io.spring.dependency-management") version "1.0.9.RELEASE"
+    id("org.liquibase.gradle") version "2.1.1"
+    kotlin("jvm") version "1.6.20"
+    kotlin("plugin.spring") version "1.4.32"
+    kotlin("plugin.jpa") version "1.6.20"
 }
 
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_11
 }
 
-configurations {
-    compileOnly {
-        extendsFrom(configurations.annotationProcessor.get())
+sourceSets {
+    main {
+        java {
+            srcDirs("src/main/kotlin")
+        }
     }
 }
 
 repositories {
     mavenCentral()
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor(0, "seconds")
 }
 
 dependencies {
@@ -32,12 +46,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-validation:3.2.5")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.liquibase:liquibase-core")
-    implementation("org.hibernate:hibernate-core:5.4.32.Final")
-    implementation("com.vladmihalcea:hibernate-types-52:2.20.0")
+    implementation("org.hibernate:hibernate-core")
+    implementation("com.vladmihalcea:hibernate-types-52:2.21.1")
     implementation("org.springframework.retry:spring-retry:1.3.1")
     implementation("org.apache.ignite:ignite-core:2.10.0")
     implementation("org.springframework.cloud:spring-cloud-sleuth-instrumentation:3.0.3")
@@ -48,23 +62,46 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("com.h2database:h2")
     implementation(kotlin("stdlib-jdk8"))
+
+    liquibaseRuntime("org.liquibase:liquibase-core:3.6.1")
+    liquibaseRuntime("org.liquibase:liquibase-groovy-dsl:2.0.1")
+    liquibaseRuntime("ch.qos.logback:logback-classic")
+    liquibaseRuntime("com.oracle.database.jdbc:ojdbc11")
+}
+
+tasks.getByName<Jar>("jar") {
+    enabled = false
 }
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    jvmTarget = "17"
-}
-val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "17"
+liquibase {
+    val props = Properties()
+    val fileProperties = file("$projectDir/liquibase.properties")
+
+    if (fileProperties.exists()) {
+        fileProperties.inputStream().let { props.load(it) }
+        activities.register("main") {
+            "url" to props.getProperty("url")
+            "username" to props.getProperty("username")
+            "password" to props.getProperty("password")
+            "databaseChangeLogTableName" to props.getProperty("databaseChangeLogTableName")
+            "defaultSchemaName" to props.getProperty("defaultSchemaName")
+            "changeLogFile" to props.getProperty("changeLogFile")
+        }
+    } else {
+        fileProperties.appendText("jdbc:oracle:thin:@localhost:1522/PAYMENT_API\n")
+        fileProperties.appendText("username=PAYMENT_API_APP\n")
+        fileProperties.appendText("password=change_it\n")
+        fileProperties.appendText("changeLogFile=${project.projectDir.path}/src/main/resources/liquibase/changelog.yaml\n")
+        fileProperties.appendText("defaultSchemaName=PAYMENT_API\n")
+        fileProperties.appendText("databaseChangeLogTableName=DATABASECHANGELOG\n")
+        println("Please fill ${projectDir}/liquibase.properties if you want use liquibase plugin")
+    }
 }

@@ -9,17 +9,20 @@ import org.springframework.stereotype.Service
 
 @Service
 class CancelOperation(
-    val requestService: RequestService,
     lockService: LockService,
+    val requestService: RequestService,
     val responseService: ResponseService,
-    val nspkService: NspkService
+    val nspkService: NspkService,
+    val cardDataService: CardDataService
 ) : AbstractOperation<CancelRequest>(
     requestService,
     lockService
 ) {
 
     override fun getPaymentInfo(request: CancelRequest): Payment {
-        return requestService.getRequest(request.originalRequestId).payment
+        val payment = requestService.getRequest(request.originalRequestId).payment
+        payment.cardData = cardDataService.getCardDataByPayment(payment.id!!)
+        return payment
     }
 
     override fun getRequestInfo(request: CancelRequest, payment: Payment): Request {

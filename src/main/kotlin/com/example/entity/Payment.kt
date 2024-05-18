@@ -1,7 +1,7 @@
 package com.example.entity
 
 import com.example.enums.PaymentStatus
-import com.vladmihalcea.hibernate.type.json.JsonType
+import com.vladmihalcea.hibernate.type.json.JsonStringType
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
@@ -11,9 +11,9 @@ import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
-@Table(name = "PAYMENT", schema = "PAYMENT_API")
+@Table(name = "PAYMENT", schema = "PAYMENT_API_APP")
 @SequenceGenerator(name = "PAYMENT_SEQ", sequenceName = "PAYMENT_SEQ", allocationSize = 1)
-@TypeDef(name = "json", typeClass = JsonType::class)
+@TypeDef(name = "json", typeClass = JsonStringType::class)
 data class Payment(
 
     @Id
@@ -33,22 +33,20 @@ data class Payment(
     @Column(name = "ORIGINAL_AMOUNT", columnDefinition = "NUMBER", nullable = false)
     var originalAmount: BigDecimal,
 
-    @Column(name = "STATUS", columnDefinition = "VARCHAR(50)", nullable = false)
+    @Column(name = "STATUS", columnDefinition = "VARCHAR2(50)", nullable = false)
     @Enumerated(EnumType.STRING)
     var status: PaymentStatus,
 
-    @Lob
-    @Column(name = "ADDITIONAL_DATA", columnDefinition = "CLOB")
+    @Column(name = "ADDITIONAL_DATA")
     @Type(type = "json")
-    var additionalData: MutableMap<String, Any>,
+    var additionalData: Map<String, Any>,
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "payment")
     var requests: Set<Request> = HashSet(),
 
 ) : Serializable {
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "CARD_DATA_ID")
+    @Transient
     lateinit var cardData: CardData
 
     @PreUpdate

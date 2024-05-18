@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
-@Table(name = "CARD_DATA", schema = "PAYMENT_API")
+@Table(name = "CARD_DATA", schema = "PAYMENT_API_APP")
 @SequenceGenerator(name = "CARD_DATA_SEQ", sequenceName = "CARD_DATA_SEQ", allocationSize = 1)
 data class CardData(
 
