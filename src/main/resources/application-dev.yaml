@@ -7,7 +7,7 @@ spring:
   datasource:
     url: jdbc:postgresql://77.232.142.33:5432/payment_api_app
     username: payment_api_app
-    password: AdminPass
+    password: ${datasource_password}
     driver-class-name: org.postgresql.Driver
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
