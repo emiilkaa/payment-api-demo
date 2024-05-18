@@ -63,7 +63,7 @@ class MonitoringServiceImpl(
         return monitoringIgniteService.monitoringCache(joinPoint, MonitoringConstants.UNLOCK_ACTION, lockInfo.cacheName)
     }
 
-    @Around("@annotation(com.example.monitoring.annotation.MonitoringOperationInfo")
+    @Around("@annotation(com.example.monitoring.annotation.MonitoringOperationInfo)")
     override fun monitoringOperationInfo(joinPoint: ProceedingJoinPoint, id: Long): Any? {
         val annotation: MonitoringOperationInfo = getAnnotation(joinPoint, MonitoringOperationInfo::class.java)
         val requestType = annotation.requestType
