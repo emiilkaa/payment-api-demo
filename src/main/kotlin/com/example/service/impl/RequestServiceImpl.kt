@@ -8,7 +8,6 @@ import com.example.enums.RequestStatus
 import com.example.enums.RequestType
 import com.example.model.OperationResponse
 import com.example.repository.RequestRepository
-import com.example.repository.extension.findByIdOrThrow
 import com.example.service.PaymentService
 import com.example.service.RequestService
 import org.springframework.stereotype.Service
@@ -21,7 +20,7 @@ class RequestServiceImpl(
 ): RequestService {
 
     override fun getRequest(requestId: Long): Request {
-        return requestRepository.findByIdOrThrow(requestId)
+        return requestRepository.findByRequestId(requestId)
     }
 
     override fun linkRequest(requestId: Long, request: Request, payment: Payment): Request {

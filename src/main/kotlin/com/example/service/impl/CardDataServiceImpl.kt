@@ -27,9 +27,4 @@ class CardDataServiceImpl(
         return cardDataRepository.save(cardData)
     }
 
-    override fun getCardDataByPayment(paymentId: Long): CardData {
-        return cardDataRepository.findByPaymentId(paymentId)
-            ?: throw RuntimeException("CardData not found for payment $paymentId")
-    }
-
 }

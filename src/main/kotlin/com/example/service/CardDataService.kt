@@ -8,6 +8,5 @@ interface CardDataService {
 
     fun createCardData(cardInfo: CardInfo, dttm: LocalDateTime): CardData
     fun saveCardData(cardData: CardData): CardData
-    fun getCardDataByPayment(paymentId: Long): CardData
 
 }

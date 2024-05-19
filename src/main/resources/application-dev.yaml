@@ -72,3 +72,10 @@ management:
 logging:
   level:
     org.springframework.jdbc.core.JdbcTemplate: DEBUG
+
+log4j:
+  logger:
+    org:
+      hibernate:
+        SQL: debug
+        type: trace

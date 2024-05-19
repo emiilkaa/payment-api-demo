@@ -14,6 +14,7 @@ plugins {
     kotlin("jvm") version "1.6.20"
     kotlin("plugin.spring") version "1.4.32"
     kotlin("plugin.jpa") version "1.6.20"
+    kotlin("kapt") version "1.5.20"
 }
 
 group = "com.example"
@@ -64,6 +65,8 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("com.h2database:h2")
     implementation(kotlin("stdlib-jdk8"))
+
+    kapt("org.hibernate:hibernate-jpamodelgen:5.4.30.Final")
 
     liquibaseRuntime("org.liquibase:liquibase-core:3.6.1")
     liquibaseRuntime("org.liquibase:liquibase-groovy-dsl:2.0.1")

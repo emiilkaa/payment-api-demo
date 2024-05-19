@@ -42,13 +42,13 @@ data class Payment(
     @Type(type = "jsonb")
     var additionalData: Map<String, Any>,
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "payment")
-    var requests: Set<Request> = HashSet(),
-
 ) : Serializable {
 
     @Transient
     lateinit var cardData: CardData
+
+    @Transient
+    var requests: MutableSet<Request> = HashSet()
 
     @PreUpdate
     fun preUpdate() {
@@ -68,6 +68,12 @@ data class Payment(
     @Override
     override fun toString(): String {
         return this::class.simpleName + "(id = $id , dateCreated = $dateCreated)"
+    }
+
+    fun requestsSet(): MutableSet<Request> {
+        if (requests.isEmpty())
+            requests = HashSet()
+        return requests
     }
 
 }

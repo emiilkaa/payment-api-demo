@@ -13,17 +13,14 @@ class CancelOperation(
     lockService: LockService,
     val requestService: RequestService,
     val responseService: ResponseService,
-    val nspkService: NspkService,
-    val cardDataService: CardDataService
+    val nspkService: NspkService
 ) : AbstractOperation<CancelRequest>(
     requestService,
     lockService
 ) {
 
     override fun getPaymentInfo(request: CancelRequest): Payment {
-        val payment = requestService.getRequest(request.originalRequestId).payment
-        payment.cardData = cardDataService.getCardDataByPayment(payment.getId())
-        return payment
+        return requestService.getRequest(request.originalRequestId).payment
     }
 
     override fun getRequestInfo(request: CancelRequest, payment: Payment): Request {

@@ -43,15 +43,13 @@ data class NspkData(
     @Type(type = "jsonb")
     var responseMessage: Map<String, Any>?,
 
+    @Column(name = "PAYMENT_ID", columnDefinition = "numeric", nullable = false)
+    var paymentId: Long,
+
+    @Column(name = "REQUEST_ID", columnDefinition = "numeric", nullable = false)
+    var requestId: Long
+
 ) : Serializable {
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "PAYMENT_ID", nullable = false)
-    lateinit var payment: Payment
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "REQUEST_ID", nullable = false)
-    lateinit var request: Request
 
     @PreUpdate
     fun preUpdate() {

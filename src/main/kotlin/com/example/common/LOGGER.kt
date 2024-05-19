@@ -8,6 +8,7 @@ object LOGGER {
     val LOCK: Logger = LoggerFactory.getLogger("LOCK")
     val MONITORING: Logger = LoggerFactory.getLogger("MONITORING")
     val OPERATION: Logger = LoggerFactory.getLogger("OPERATION")
+    val REPOSITORY_UPDATE: Logger = LoggerFactory.getLogger("REPOSITORY_UPDATE")
     val REQUEST: Logger = LoggerFactory.getLogger("REQUEST_SERVICE")
 
 }

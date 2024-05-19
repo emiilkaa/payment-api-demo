@@ -56,6 +56,9 @@ data class Request(
     @JoinColumn(name = "PAYMENT_ID", nullable = false)
     lateinit var payment: Payment
 
+    @Transient
+    var nspkData: NspkData? = null
+
     @PreUpdate
     fun preUpdate() {
         this.dateUpdated = LocalDateTime.now()

@@ -2,6 +2,7 @@ package com.example.service.impl
 
 import com.example.entity.NspkData
 import com.example.entity.Request
+import com.example.entity.extension.getId
 import com.example.model.NspkRequest
 import com.example.model.NspkResponse
 import com.example.repository.NspkDataRepository
@@ -46,10 +47,10 @@ class NspkServiceImpl(
             requestMessage = objectMapper.convertValue(nspkRequest, object:
                 TypeReference<Map<String, Any>>() {}),
             responseMessage = objectMapper.convertValue(nspkResponse, object:
-                TypeReference<Map<String, Any>>() {})
+                TypeReference<Map<String, Any>>() {}),
+            requestId = request.getId(),
+            paymentId = request.payment.getId()
         )
-        nspkData.request = request
-        nspkData.payment = request.payment
         nspkDataRepository.save(nspkData)
     }
 
