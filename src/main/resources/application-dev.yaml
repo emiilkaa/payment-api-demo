@@ -5,7 +5,7 @@ spring:
   application:
     name: payment-api-demo
   datasource:
-    url: jdbc:oracle:thin:@77.232.142.33:1521/ORCLPDB1
+    url: jdbc:oracle:thin:@77.232.142.33:1521/PAYMENT_API_APP
     username: PAYMENT_API_APP
     password: ${datasource_password}
     driver-class-name: oracle.jdbc.OracleDriver

@@ -96,7 +96,7 @@ liquibase {
             "changeLogFile" to props.getProperty("changeLogFile")
         }
     } else {
-        fileProperties.appendText("jdbc:oracle:thin:@localhost:1522/PAYMENT_API\n")
+        fileProperties.appendText("jdbc:oracle:thin:@localhost:1522/PAYMENT_API_APP\n")
         fileProperties.appendText("username=PAYMENT_API_APP\n")
         fileProperties.appendText("password=change_it\n")
         fileProperties.appendText("changeLogFile=${project.projectDir.path}/src/main/resources/liquibase/changelog.yaml\n")
