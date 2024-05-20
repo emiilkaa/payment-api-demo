@@ -51,7 +51,7 @@ class NspkServiceImpl(
             requestId = request.getId(),
             paymentId = request.payment.getId()
         )
-        nspkDataRepository.save(nspkData)
+        nspkDataRepository.persist(nspkData)
     }
 
 }

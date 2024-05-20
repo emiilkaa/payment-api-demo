@@ -24,7 +24,7 @@ class CardDataServiceImpl(
     }
 
     override fun saveCardData(cardData: CardData): CardData {
-        return cardDataRepository.save(cardData)
+        return cardDataRepository.persist(cardData)
     }
 
 }

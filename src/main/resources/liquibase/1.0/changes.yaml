@@ -12,7 +12,7 @@ databaseChangeLog:
   - changeSet:
       id: 1.0-2
       author: e.karachik
-      comment: create indexes on foreign keys
+      comment: create indexes on keys with id
       changes:
         - sqlFile:
             dbms: postgresql

@@ -7,25 +7,24 @@ import com.example.entity.extension.requestInfo
 import com.example.model.OperationInfo
 import com.example.monitoring.MonitoringConstants
 import com.example.monitoring.annotation.MonitoringOperationInfo
-import com.example.repository.RequestRepository
 import com.example.service.OperationInfoService
+import com.example.service.RequestService
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
 
 @Service
 class OperationInfoServiceImpl(
-    private val requestRepository: RequestRepository
+    private val requestService: RequestService
 ) : OperationInfoService {
 
     @MonitoringOperationInfo(MonitoringConstants.BY_REQUEST_ID)
     override fun getOperationInfoByRequestId(requestId: Long): OperationInfo {
-        val request = requestRepository.findByRequestId(requestId)
+        val request = requestService.getRequest(requestId)
         return operationInfoByPayment(request.payment)
     }
 
     @MonitoringOperationInfo(MonitoringConstants.BY_PAYMENT_ID)
-    override fun getOperationInfoByPaymentId(paymentId: Long, operationDate: LocalDateTime): OperationInfo {
-        val requests = requestRepository.findByPaymentId(paymentId, operationDate)
+    override fun getOperationInfoByPaymentId(paymentId: Long): OperationInfo {
+        val requests = requestService.getRequestsByPaymentId(paymentId)
         return operationInfoByPayment(requests.first().payment)
     }
 

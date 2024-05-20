@@ -7,11 +7,13 @@ import com.example.enums.PaymentStatus
 import com.example.enums.RequestStatus
 import com.example.enums.RequestType
 import com.example.model.OperationResponse
+import com.example.model.exception.NotFoundException
 import com.example.repository.RequestRepository
 import com.example.service.PaymentService
 import com.example.service.RequestService
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import java.time.LocalDateTime
 
 @Service
 class RequestServiceImpl(
@@ -20,11 +22,21 @@ class RequestServiceImpl(
 ): RequestService {
 
     override fun getRequest(requestId: Long): Request {
-        return requestRepository.findByRequestId(requestId)
+        val date = LocalDateTime.now().minusDays(7L)
+        return try {
+            requestRepository.findByRequestIdAndDateCreatedAfter(requestId, date)
+        } catch (ex: NotFoundException) {
+            LOGGER.REQUEST.info("Request $requestId not found within 7 days, attempt to full scan")
+            requestRepository.findByRequestId(requestId)
+        }
+    }
+
+    override fun getRequestsByPaymentId(paymentId: Long): List<Request> {
+        return requestRepository.findByPaymentId(paymentId)
     }
 
     override fun linkRequest(requestId: Long, request: Request, payment: Payment): Request {
-        val originalRequest = payment.requests.firstOrNull { it.id == requestId }
+        val originalRequest = payment.requestsSet().firstOrNull { it.id == requestId }
             ?: throw RuntimeException("Request with id $requestId not found")
         request.payment = originalRequest.payment
         request.terminalId = originalRequest.terminalId
@@ -33,7 +45,7 @@ class RequestServiceImpl(
 
     override fun saveRequest(request: Request): Request {
         try {
-            return requestRepository.save(request)
+            return requestRepository.persist(request)
         } catch (ex: Exception) {
             LOGGER.REQUEST.info("Unable to save request info ${ex.message}", ex)
             throw ex

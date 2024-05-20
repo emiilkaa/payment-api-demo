@@ -1,9 +1,7 @@
 package com.example.repository.impl
 
-import com.example.entity.Payment
 import com.example.entity.Request
-import com.example.entity.extension.getId
-import com.example.enums.RequestType
+import com.example.model.exception.NotFoundException
 import com.example.repository.HQLRequestRepository
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -52,57 +50,21 @@ class HQLRequestRepositoryImpl(
             requestRowMapper
         ).apply {
             if (this.size != 1) {
-                throw RuntimeException("Request not found by id $requestId and dateCreated: $dateCreated")
-            }
-        }.first()
-    }
-
-    override fun findByRequestIdAndDateCreatedAfterAndDateCreatedBefore(requestId: Long, startDate: LocalDateTime, endDate: LocalDateTime): Request {
-        val parameters = mutableMapOf<String, Any>(
-            Pair(REQUEST_ID_PARAM, requestId),
-            Pair(DATE_CREATED_PARAM, FORMATTER.format(startDate)),
-            Pair(CURRENT_DATE_PARAM, FORMATTER.format(endDate))
-        )
-
-        return postgresJdbcTemplate.query(
-            SELECT_REQUEST_BY_REQUEST_ID_AND_DATE_CREATED_AFTER,
-            parameters,
-            requestRowMapper
-        ).apply {
-            if (this.size != 1) {
-                throw RuntimeException("Request not found by id $requestId and startDate: $startDate and endDate: $endDate")
+                throw NotFoundException("Request not found by id $requestId and dateCreated: $dateCreated")
             }
         }.first()
     }
 
     @Transactional(readOnly = true)
-    override fun findByPaymentId(paymentId: Long, date: LocalDateTime): List<Request> {
+    override fun findByPaymentId(paymentId: Long): List<Request> {
         val currentDate = currentDate()
         val parameters = mutableMapOf<String, Any>(
             Pair(PAYMENT_ID_PARAM, paymentId),
-            Pair(DATE_CREATED_PARAM, FORMATTER.format(date)),
             Pair(CURRENT_DATE_PARAM, FORMATTER.format(currentDate))
         )
 
         return postgresJdbcTemplate.query(
             SELECT_REQUESTS_BY_PAYMENT_ID,
-            parameters,
-            requestRowMapper
-        )
-    }
-
-    @Transactional(readOnly = true)
-    override fun findByPaymentAndRequestType(payment: Payment, type: RequestType, date: LocalDateTime): List<Request> {
-        val currentDate = currentDate()
-        val parameters = mutableMapOf<String, Any>(
-            Pair(PAYMENT_ID_PARAM, payment.getId()),
-            Pair(REQUEST_TYPE_PARAM, type.name),
-            Pair(DATE_CREATED_PARAM, FORMATTER.format(date)),
-            Pair(CURRENT_DATE_PARAM, FORMATTER.format(currentDate))
-        )
-
-        return postgresJdbcTemplate.query(
-            SELECT_REQUEST_BY_PAYMENT_ID_AND_TYPE,
             parameters,
             requestRowMapper
         )
@@ -115,7 +77,6 @@ class HQLRequestRepositoryImpl(
 
         private const val REQUEST_ID_PARAM = "requestId"
         private const val PAYMENT_ID_PARAM = "paymentId"
-        private const val REQUEST_TYPE_PARAM = "requestType"
         private const val DATE_CREATED_PARAM = "dateCreated"
         private const val CURRENT_DATE_PARAM = "currentDate"
 
@@ -178,28 +139,6 @@ class HQLRequestRepositoryImpl(
               and r.date_created <= :$CURRENT_DATE_PARAM::timestamp
         """.trimIndent()
 
-        private val SELECT_REQUEST_BY_PAYMENT_ID_AND_TYPE = """
-            select
-              $REQUEST_FULL,
-              $NSPK_DATA_FULL,
-              $PAYMENT_FULL,
-              $CARD_DATA_FULL
-            from payment_api_app.request r
-              left join payment_api_app.nspk_data nd on nd.request_id = r.id
-                and nd.date_created >= :$DATE_CREATED_PARAM::timestamp
-                and nd.date_created <= :$CURRENT_DATE_PARAM::timestamp
-              join payment_api_app.payment p on p.id = r.payment_id
-                and p.date_created >= :$DATE_CREATED_PARAM::timestamp
-                and p.date_created <= :$CURRENT_DATE_PARAM::timestamp
-              join payment_api_app.card_data cd on cd.payment_id = p.id
-                and cd.date_created >= :$DATE_CREATED_PARAM::timestamp
-                and cd.date_created <= :$CURRENT_DATE_PARAM::timestamp
-            where r.payment_id = :$PAYMENT_ID_PARAM
-              and r.request_type = :$REQUEST_TYPE_PARAM
-              and r.date_created >= :$DATE_CREATED_PARAM::timestamp
-              and r.date_created <= :$CURRENT_DATE_PARAM::timestamp
-            """.trimIndent()
-
         private val SELECT_REQUESTS_BY_PAYMENT_ID = """
             select
               $REQUEST_FULL,
@@ -208,16 +147,12 @@ class HQLRequestRepositoryImpl(
               $CARD_DATA_FULL
             from payment_api_app.request r
               left join payment_api_app.nspk_data nd on nd.request_id = r.id
-                and nd.date_created >= :$DATE_CREATED_PARAM::timestamp
                 and nd.date_created <= :$CURRENT_DATE_PARAM::timestamp
               join payment_api_app.payment p on p.id = r.payment_id
-                and p.date_created >= :$DATE_CREATED_PARAM::timestamp
                 and p.date_created <= :$CURRENT_DATE_PARAM::timestamp
               join payment_api_app.card_data cd on cd.payment_id = p.id
-                and cd.date_created >= :$DATE_CREATED_PARAM::timestamp
                 and cd.date_created <= :$CURRENT_DATE_PARAM::timestamp
             where r.payment_id = :$PAYMENT_ID_PARAM
-              and r.date_created >= :$DATE_CREATED_PARAM::timestamp
               and r.date_created <= :$CURRENT_DATE_PARAM::timestamp
             """.trimIndent()
 

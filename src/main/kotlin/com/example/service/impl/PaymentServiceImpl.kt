@@ -13,7 +13,7 @@ class PaymentServiceImpl(
 
     override fun savePayment(payment: Payment): Payment {
         return try {
-            paymentRepository.save(payment)
+            paymentRepository.persist(payment)
         } catch (ex: Exception) {
             LOGGER.REQUEST.error("Unable to save pay ${ex.message.toString()}", ex)
             throw ex

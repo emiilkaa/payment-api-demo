@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 @Configuration
-class JdbcConfiguration {
+class JdbcConfig {
 
     @Bean
     fun postgresJdbcTemplate(dataSource: HikariDataSource): NamedParameterJdbcTemplate {
