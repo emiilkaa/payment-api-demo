@@ -26,10 +26,16 @@ begin
 
             select in_table_name || '_' || year || month || day into partition_name;
 
-            execute format('create table if not exists payment_api_app.%I (like payment_api_app.%I including defaults including constraints);',
-                           partition_name, in_table_name);
-            if not exists(select null from pg_catalog.pg_inherits i join pg_catalog.pg_class as c on c.oid = i.inhrelid where c.relname = partition_name) then
-                execute format('alter table payment_api_app.%I attach partition payment_api_app.%I for values from (%L) to (%L);', in_table_name, partition_name, from_date, to_date);
+            execute format(
+                    'create table if not exists payment_api_app.%I (like payment_api_app.%I including defaults including constraints);',
+                    partition_name, in_table_name);
+            if not exists(select null
+                          from pg_catalog.pg_inherits i
+                                   join pg_catalog.pg_class as c on c.oid = i.inhrelid
+                          where c.relname = partition_name) then
+                execute format(
+                        'alter table payment_api_app.%I attach partition payment_api_app.%I for values from (%L) to (%L);',
+                        in_table_name, partition_name, from_date, to_date);
             end if;
         end loop;
 end;

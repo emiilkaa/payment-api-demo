@@ -1,1 +1,11 @@
-# All SQL scripts for partitioning were executed manually
+databaseChangeLog:
+  - changeSet:
+      id: 1.1-1
+      author: e.karachik
+      comment: add indexes on date_created columns
+      changes:
+        - sqlFile:
+            dbms: postgresql
+            encoding: utf8
+            path: sql/index_on_date_created.sql
+            relativeToChangelogFile: true
