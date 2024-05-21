@@ -18,10 +18,10 @@ services:
     image: apacheignite/ignite:latest
     container_name: ignite
     ports:
-      - "10800:10800"  # Port for client connections
-      - "47100:47100"  # Port for communication SPI
-      - "47500:47500"  # Port for discovery SPI
-      - "49112:49112"  # Port for JMX metrics
+      - "10800:10800"
+      - "47100:47100"
+      - "47500:47500"
+      - "49112:49112"
     volumes:
       - ignite-data:/data
 
@@ -34,6 +34,16 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+
+  postgres:
+    image: postgres:15.3
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=payment_api_app
+      - POSTGRES_PASSWORD=change_it
+      - POSTGRES_DB=payment_api_app
 
 volumes:
   grafana-data:
