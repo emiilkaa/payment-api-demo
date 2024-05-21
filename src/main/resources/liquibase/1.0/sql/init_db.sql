@@ -2,8 +2,8 @@ create table PAYMENT_API_APP.REQUEST
 (
     ID               NUMBER not null
         constraint PAYMENT_API_APP_REQUEST_PK primary key,
-    DATE_CREATED     TIMESTAMP(6),
-    DATE_UPDATED     TIMESTAMP(6),
+    DATE_CREATED     TIMESTAMP(6) not null,
+    DATE_UPDATED     TIMESTAMP(6) not null,
     REQUEST_TYPE     VARCHAR2(50) not null,
     AMOUNT           NUMBER not null,
     STATUS           VARCHAR2(50) not null,
@@ -17,8 +17,8 @@ create table PAYMENT_API_APP.PAYMENT
 (
     ID               NUMBER not null
         constraint PAYMENT_API_APP_PAYMENT_PK primary key,
-    DATE_CREATED     TIMESTAMP(6),
-    DATE_UPDATED     TIMESTAMP(6),
+    DATE_CREATED     TIMESTAMP(6) not null,
+    DATE_UPDATED     TIMESTAMP(6) not null,
     AMOUNT           NUMBER not null,
     ORIGINAL_AMOUNT           NUMBER not null,
     STATUS           VARCHAR2(50) not null,
@@ -29,8 +29,8 @@ create table PAYMENT_API_APP.CARD_DATA
 (
     ID               NUMBER not null
         constraint PAYMENT_API_APP_CARD_DATA_PK primary key,
-    DATE_CREATED     TIMESTAMP(6),
-    DATE_UPDATED     TIMESTAMP(6),
+    DATE_CREATED     TIMESTAMP(6) not null,
+    DATE_UPDATED     TIMESTAMP(6) not null,
     PAYMENT_SCHEME           VARCHAR2(50) not null,
     PAN           VARCHAR2(50),
     PAN_EXP_DATE           VARCHAR2(24),
@@ -42,8 +42,8 @@ create table PAYMENT_API_APP.NSPK_DATA
 (
     ID               NUMBER not null
         constraint PAYMENT_API_APP_NSPK_DATA_PK primary key,
-    DATE_CREATED     TIMESTAMP(6),
-    DATE_UPDATED     TIMESTAMP(6),
+    DATE_CREATED     TIMESTAMP(6) not null,
+    DATE_UPDATED     TIMESTAMP(6) not null,
     RESPONSE_CODE VARCHAR2(50),
     ERROR_CODE VARCHAR2(30),
     ERROR_MESSAGE VARCHAR2(50),
